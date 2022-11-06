@@ -32,36 +32,49 @@
 //!
 //! ```rust
 //! use rustextile::{Textile, HtmlKind};
+//! use rustextile::ammonia::{UrlRelative, url::Url};
 //!
-//! // Processing some ordinary Textile markup
+//! // Processing some ordinary Textile markup.
 //! let textile = Textile::default()
 //!     .set_html_kind(HtmlKind::XHTML);
-//!
 //! let html = textile.parse("h1. It works!");
 //! assert_eq!(html, "<h1>It works!</h1>");
 //!
+//! // Raw HTML inserts are possible.
 //! let html = textile.parse("<strong>Raw HTML insert</strong>");
 //! assert_eq!(html, r#"<p><strong>Raw <span class="caps">HTML</span> insert</strong></p>"#);
 //!
-//! // Forcing all links to have a specific "rel" attribute
+//! // Forcing all links to have a specific "rel" attribute.
 //! let textile = textile.set_rel(Some("nofollow"));
 //! let html = textile.parse(r#"This "link":https://example.com/ won't be scanned by Google"#);
 //! assert_eq!(html, r#"<p>This <a href="https://example.com/" rel="nofollow">link</a> won&#8217;t be scanned by Google</p>"#);
 //!
-//! // Same restrictions can be placed on the parser
+//! // The parser can be restricted from using advanced features (HTML inserts, CSS classes, etc.).
 //! let textile = Textile::default().set_restricted(true);
 //! let html = textile.parse("<div>Now raw HTML is restricted</div>");
 //! assert_eq!(html, r#"<p>&lt;div&gt;Now raw <span class="caps">HTML</span> is restricted&lt;/div&gt;</p>"#);
+//!
+//! // You can limit its capabilities to only paragraphs and blockquotes.
+//! let textile = Textile::default().set_lite(true);
+//! let html = textile.parse("h1. This *won't* become a header");
+//! assert_eq!(html, r#"<p>h1. This <strong>won&#8217;t</strong> become a header</p>"#);
 //!
 //! // Extra sanitation of the output through the Ammonia library.
 //! let textile = Textile::default()
 //!     .set_sanitize(true);
 //! let html = textile.parse(r#"<script type="text/javascript">alert("Say hi!")</script>JS has been sanitized away!"#);
 //! assert_eq!(html, "<p>JS has been sanitized away!</p>");
-//! // ... which can be finely tuned to do what you need exactly
-//! let textile = textile.adjust_sanitizer(|s| s.rm_tags(&["p", "del"]));
-//! let html = textile.parse("Sanitizer -can also- be tuned");
-//! assert_eq!(html, "Sanitizer can also be tuned");
+//!
+//! // This sanitation can be finely tuned to do exactly what you need.
+//! let textile = textile.adjust_sanitizer(|sanitizer| {
+//!     sanitizer
+//!         .rm_tags(&["p", "del"])
+//!         .url_relative(
+//!             UrlRelative::RewriteWithBase(
+//!                 Url::parse("https://example.com").unwrap()))
+//! });
+//! let html = textile.parse(r#"Sanitizer -can also- be "tuned":/some-page/"#);
+//! assert_eq!(html, r#"Sanitizer can also be <a href="https://example.com/some-page/">tuned</a>"#);
 //!
 //! ````
 
