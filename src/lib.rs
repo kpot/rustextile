@@ -75,4 +75,6 @@ mod table;
 mod urlutils;
 mod regex_snips;
 
-pub use crate::parser::{Textile, HtmlKind, AmmoniaBuilder};
+pub use ammonia;
+
+pub use crate::parser::{Textile, HtmlKind};

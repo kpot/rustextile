@@ -8,7 +8,6 @@ use std::hash::Hasher;
 use indexmap::IndexMap;
 use lazy_static::lazy_static;
 use fancy_regex::{Regex, Captures, Replacer, Match};
-pub use ammonia::Builder as AmmoniaBuilder;
 
 use crate::charcounter::CharCounter;
 use crate::regextra::{split_with_capture, fregex, multi_replace, multi_replace_with_one, unwrap_or_empty};
@@ -1774,7 +1773,8 @@ pub enum HtmlKind {
     HTML5
 }
 
-type AmmoniaConfigurator = dyn for <'a, 'b> Fn(&'a mut AmmoniaBuilder<'b>) -> &'a AmmoniaBuilder<'b>;
+type AmmoniaConfigurator = dyn for <'a, 'b>
+    Fn(&'a mut crate::ammonia::Builder<'b>) -> &'a crate::ammonia::Builder<'b>;
 
 /// The core structure responsible for converting Textile markup into HTML.
 ///
@@ -1910,7 +1910,7 @@ impl Textile {
         let text = match self.sanitizer_config {
             Some(ref configurator) =>
                 configurator(
-                    ammonia::Builder::default().link_rel(None)
+                    crate::ammonia::Builder::default().link_rel(None)
                 )
                 .clean(&text)
                 .to_string()
@@ -2024,7 +2024,7 @@ impl Textile {
     }
 
     /// Controls the final extra HTML sanitation step, which is done by
-    /// the [Ammonia](https://docs.rs/ammonia/latest/ammonia/) library. A quote
+    /// the [Ammonia](crate::ammonia) library. A quote
     /// from the Ammonia's documentation:
     ///
     /// > "Ammonia is designed to prevent cross-site scripting, layout breaking,
@@ -2046,7 +2046,7 @@ impl Textile {
 
     /// Just like [`Textile::set_sanitize`] this method enables additional
     /// sanitation of the output HTML through the
-    /// [Ammonia](https://docs.rs/ammonia/latest/ammonia/) library. But you can
+    /// [Ammonia](crate::ammonia) library. But you can
     /// also configure the sanitizer yourself.
     ///
     /// Example:
@@ -2059,7 +2059,7 @@ impl Textile {
     /// assert_eq!(html, r#"<p><a href="https://example.com/" rel="noopener">a link</a></p>"#);
     /// ```
     pub fn adjust_sanitizer<F>(mut self, configurator: F) -> Self
-        where for <'a, 'b> F: Fn(&'a mut AmmoniaBuilder<'b>) -> &'a AmmoniaBuilder<'b> + 'a
+        where for <'a, 'b> F: Fn(&'a mut crate::ammonia::Builder<'b>) -> &'a crate::ammonia::Builder<'b> + 'a
     {
         self.sanitizer_config = Some(Box::new(configurator));
         self
