@@ -1,0 +1,33 @@
+HTM5 image alignment:
+  setup:
+    setHtmlType: html5
+  input: |
+    !>10x10.gif!
+
+    !=10x10.gif!
+
+    !<10x10.gif!
+
+  expect: |
+    <p><img alt="" class="align-right" src="10x10.gif" /></p>
+
+    <p><img alt="" class="align-center" src="10x10.gif" /></p>
+
+    <p><img alt="" class="align-left" src="10x10.gif" /></p>
+
+XHTML image alignment:
+  setup:
+    setHtmlType: xhtml
+  input: |
+    !>10x10.gif!
+
+    !=10x10.gif!
+
+    !<10x10.gif!
+
+  expect: |
+    <p><img align="right" alt="" src="10x10.gif" /></p>
+
+    <p><img align="center" alt="" src="10x10.gif" /></p>
+
+    <p><img align="left" alt="" src="10x10.gif" /></p>

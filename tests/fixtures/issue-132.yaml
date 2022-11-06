@@ -1,0 +1,40 @@
+Alignment is accepted in restricted mode when doctype is set to HTML5 :
+  setup:
+    setRestricted: true
+    setLite: false
+    setImages: true
+    setLinkRelationShip: nofollow
+  input: |
+    !=10x10.gif!
+
+    !>10x10.gif!
+
+    !<10x10.gif!
+
+  expect: |
+    <p><img alt="" class="align-center" src="10x10.gif" /></p>
+
+    <p><img alt="" class="align-right" src="10x10.gif" /></p>
+
+    <p><img alt="" class="align-left" src="10x10.gif" /></p>
+
+In XHTML same generates align attribute:
+  setup:
+    setRestricted: true
+    setLite: false
+    setImages: true
+    setLinkRelationShip: nofollow
+    setHtmlType: xhtml
+  input: |
+    !=10x10.gif!
+
+    !>10x10.gif!
+
+    !<10x10.gif!
+
+  expect: |
+    <p><img align="center" alt="" src="10x10.gif" /></p>
+
+    <p><img align="right" alt="" src="10x10.gif" /></p>
+
+    <p><img align="left" alt="" src="10x10.gif" /></p>

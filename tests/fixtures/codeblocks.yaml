@@ -1,0 +1,133 @@
+Codeblock without attributes:
+  input: |
+    bc. * Here _is_ some *code*
+
+    Normal *paragraph*.
+
+    bc.. *Extended* code block
+
+    *with* _empty_ lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre><code>* Here _is_ some *code*</code></pre>
+
+    <p>Normal <strong>paragraph</strong>.</p>
+
+    <pre><code>*Extended* code block
+
+    *with* _empty_ lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Codeblock with class:
+  input: |
+    bc(indented). * Here _is_ some *code*
+
+    Normal *paragraph*.
+
+    bc(abc).. *Extended* code block
+
+    *with* _empty_ lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented"><code>* Here _is_ some *code*</code></pre>
+
+    <p>Normal <strong>paragraph</strong>.</p>
+
+    <pre class="abc"><code>*Extended* code block
+
+    *with* _empty_ lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Codeblock with language class:
+  input: |
+    bc[indented]. * Here _is_ some *code*
+
+    Normal *paragraph*.
+
+    bc[language-php].. *Extended* code block
+
+    *with* _empty_ lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre><code class="indented">* Here _is_ some *code*</code></pre>
+
+    <p>Normal <strong>paragraph</strong>.</p>
+
+    <pre><code class="language-php">*Extended* code block
+
+    *with* _empty_ lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Codeblock with class and language class:
+  input: |
+    bc(indented)[language-php]. * Here _is_ some *code*
+
+    Normal *paragraph*.
+
+    bc(abc)[example].. *Extended* code block
+
+    *with* _empty_ lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented"><code class="language-php">* Here _is_ some *code*</code></pre>
+
+    <p>Normal <strong>paragraph</strong>.</p>
+
+    <pre class="abc"><code class="example">*Extended* code block
+
+    *with* _empty_ lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Codeblock with class, id and language class:
+  input : |
+    bc(indented#uno)[language-php]. * Here _is_ some *code*
+
+    Normal *paragraph*.
+
+    bc(abc#123)[example].. *Extended* code block
+
+    *with* _empty_ lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented" id="uno"><code class="language-php">* Here _is_ some *code*</code></pre>
+
+    <p>Normal <strong>paragraph</strong>.</p>
+
+    <pre class="abc" id="123"><code class="example">*Extended* code block
+
+    *with* _empty_ lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Codeblock with class, id and invalid lang:
+  input : |
+    bc(indented#uno)[language*php]. * Here _is_ some *code*
+
+    bc(abc#123)[example*redis].. Code block
+
+    with empty lines
+
+    p(regular#somestuff). _Aaaand_, *__relax__*.
+  expect: |
+    <pre class="indented" id="uno"><code>* Here _is_ some *code*</code></pre>
+
+    <pre class="abc" id="123"><code>Code block
+
+    with empty lines</code></pre>
+
+    <p class="regular" id="somestuff"><em>Aaaand</em>, <strong><i>relax</i></strong>.</p>
+
+Pre-formatted content including something that looks like inline code:
+  input  : |
+    <pre>sdada <a href="link">Link</a> @code@ dadsada</pre>
+  expect : |
+    <pre>sdada &lt;a href=&quot;link&quot;&gt;Link&lt;/a&gt; <code>code</code> dadsada</pre>
