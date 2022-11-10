@@ -999,20 +999,61 @@ impl <'t> ParserState<'t> {
         PATTERN.replace_all(text, f_textile_list)
     }
 
+    /// Inserts <br> before each newline within a specified HTML tag,
+    /// unless it is inappropriate (like when a <br> is already there).
     pub(crate) fn do_tag_br<'a>(&mut self, tag: &'static str, input: &'a str) -> Cow<'a, str> {
-        let f_do_br = |cap: &Captures| -> String {
-            lazy_static! {
-                static ref RE: Regex = fregex!(
-                    r"(?i)(.+)(?!(?<=</dd>|</dt>|</li>|<br/>)|(?<=<br>)|(?<=<br />))\n(?![\s|])");
+
+        fn eq_ignore_ascii_case(a: &str, b: &str) -> bool {
+            if a.len() == b.len() {
+                a.chars().zip(b.chars()).all(|(a_c, b_c)| a_c.eq_ignore_ascii_case(&b_c))
+            } else {
+                false
             }
-            let content = RE.replace_all(
-                &cap[3],
-                match self.textile.html_type {
-                    HtmlKind::HTML5 => "$1<br>",
-                    HtmlKind::XHTML => "$1<br />"
-                });
-            format!("<{0}{1}>{2}{3}", &cap[1], &cap[2], content, &cap[4])
-        };
+        }
+        // Performs an equivalent of
+        // `replace_all`with a regular expression
+        // r"(?i)(.+)(?!(?<=</dd>|</dt>|</li>|<br/>)|(?<=<br>)|(?<=<br />))\n(?![\s|])"
+        // and the replacement "$1\n".
+        // This is done to avoid panic about BacktrackLimitExceeded
+        // within fancy_regex::Regex::replace_all, without the need to increase
+        // the limit via fancy_regex::RegexBuilder::backtrack_limit.
+        fn insert_brs<'c>(text: &'c str, br: &str) -> Cow<'c, str> {
+            let num_newlines = text.match_indices('\n').count();
+            if num_newlines == 0 {
+                return text.into()
+            }
+            // The <br> is not appropriate to insert after the following prefixes
+            const STOP_PREFIXES: [&str; 6] = ["</dd>", "</dt>", "</li>", "<br/>", "<br>", "<br />"];
+            let mut output = String::with_capacity(text.len() + num_newlines * br.len());
+            let lc_text = text.to_lowercase();
+            let mut next_start = 0;
+            while let Some(rel_newline_pos) = lc_text[next_start..].find('\n') {
+                let abs_newline_pos = next_start + rel_newline_pos;
+                output += &text[next_start..abs_newline_pos];
+                // Make sure the following characters do not make <br> inappropriate
+                let is_next_good = !lc_text[abs_newline_pos + 1..]
+                    .starts_with(|c| char::is_whitespace(c) || c == '|');
+                if is_next_good {
+                    // The preceding sequence should also be appropriate for <br>
+                    let is_prefix_good = !STOP_PREFIXES.iter().any(|p| {
+                        let prefix_start = abs_newline_pos - p.len().min(abs_newline_pos);
+                        let prefix = &lc_text[prefix_start..abs_newline_pos];
+                        eq_ignore_ascii_case(prefix, *p)
+                    });
+                    if is_prefix_good {
+                        output += br;
+                    }
+                }
+                output.push('\n');
+                next_start = abs_newline_pos + 1;
+            }
+            if output.is_empty() {
+                text.into()
+            } else {
+                output += &text[next_start..];
+                output.into()
+            }
+        }
 
         let mut regex_cache = self.textile.regex_cache.borrow_mut();
         let pattern = regex_cache
@@ -1021,9 +1062,14 @@ impl <'t> ParserState<'t> {
             .entry(tag)
             .or_insert_with(
                 || fregex!(
-                    &format!(r"(?s)<({0})([^>]*?)>(.*)(</\1>)",
+                    &format!(r"(?s)<{0}([^>]*?)>(.*)</{0}>",
                              fancy_regex::escape(tag))));
-        pattern.replace_all(input, f_do_br)
+
+        let br_tag = self.textile.proper_br_tag();
+        pattern.replace_all(input, |cap: &Captures| -> String {
+            let content = insert_brs(&cap[2], br_tag);
+            format!("<{0}{1}>{2}</{0}>", tag, &cap[1], content)
+        })
     }
 
     fn do_p_br<'a>(&mut self, input: &'a str) -> Cow<'a, str> {
@@ -2084,7 +2130,7 @@ impl Textile {
         self
     }
 
-    pub(crate) fn proper_br_tag(&self) -> &str {
+    pub(crate) fn proper_br_tag(&self) -> &'static str {
         match self.html_type {
             HtmlKind::XHTML => "<br />",
             HtmlKind::HTML5 => "<br>",

@@ -151,6 +151,7 @@ fn run_yaml_fixtures(names: &[&str]) {
 #[test]
 fn test_yaml_fixtures() {
     run_yaml_fixtures(&[
+        "limits",
         "basic",
         "codeblocks",
         "images",
