@@ -9,7 +9,7 @@ Linebreaks within table cells:
     <table>
     		<tr>
     			<td>foo</td>
-    			<td>bar<br>
+    			<td>bar<br />
     baz</td>
     		</tr>
     </table>

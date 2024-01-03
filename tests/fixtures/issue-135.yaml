@@ -6,7 +6,7 @@ one:
   expect: |
     <table>
     		<tr>
-    			<td>A list&#8230;<br>
+    			<td>A list&#8230;<br />
     <ul>
     	<li>one</li>
     	<li>two</li>
@@ -26,7 +26,7 @@ two:
     			<td>Col 2</td>
     		</tr>
     		<tr>
-    			<td>A list&#8230;<br>
+    			<td>A list&#8230;<br />
     <ul>
     	<li>one</li>
     	<li>two</li>
@@ -47,7 +47,7 @@ three:
     			<td>Col 2</td>
     		</tr>
     		<tr>
-    			<td colspan="2">A list&#8230;<br>
+    			<td colspan="2">A list&#8230;<br />
     <ul>
     	<li>one</li>
     	<li>two</li>

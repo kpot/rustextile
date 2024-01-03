@@ -1,6 +1,5 @@
 HTM5 image alignment:
-  setup:
-    setHtmlType: html5
+  doctype : html5
   input: |
     !>10x10.gif!
 
@@ -9,15 +8,13 @@ HTM5 image alignment:
     !<10x10.gif!
 
   expect: |
-    <p><img alt="" class="align-right" src="10x10.gif" /></p>
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-center" src="10x10.gif" /></p>
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-left" src="10x10.gif" /></p>
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10"></p>
 
 XHTML image alignment:
-  setup:
-    setHtmlType: xhtml
   input: |
     !>10x10.gif!
 
@@ -26,8 +23,8 @@ XHTML image alignment:
     !<10x10.gif!
 
   expect: |
-    <p><img align="right" alt="" src="10x10.gif" /></p>
+    <p><img align="right" alt="" height="10" src="10x10.gif" width="10" /></p>
 
-    <p><img align="center" alt="" src="10x10.gif" /></p>
+    <p><img align="center" alt="" height="10" src="10x10.gif" width="10" /></p>
 
-    <p><img align="left" alt="" src="10x10.gif" /></p>
+    <p><img align="left" alt="" height="10" src="10x10.gif" width="10" /></p>

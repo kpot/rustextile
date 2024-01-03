@@ -1,6 +1,6 @@
 Inline tag before the last question mark in the input document should be rendered when block tags are disabled:
   setup:
-    setBlockTags: false
+    - setBlockTags: false
   input  : |
     _hello_ *there*?
   expect : |

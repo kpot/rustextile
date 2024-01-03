@@ -1,9 +1,10 @@
 Alignment is accepted in restricted mode when doctype is set to HTML5 :
   setup:
-    setRestricted: true
-    setLite: false
-    setImages: true
-    setLinkRelationShip: nofollow
+    - setRestricted: true
+    - setLite: false
+    - setImages: true
+    - setLinkRelationShip: nofollow
+  doctype: html5
   input: |
     !=10x10.gif!
 
@@ -12,19 +13,18 @@ Alignment is accepted in restricted mode when doctype is set to HTML5 :
     !<10x10.gif!
 
   expect: |
-    <p><img alt="" class="align-center" src="10x10.gif" /></p>
+    <p><img alt="" class="align-center" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-right" src="10x10.gif" /></p>
+    <p><img alt="" class="align-right" height="10" src="10x10.gif" width="10"></p>
 
-    <p><img alt="" class="align-left" src="10x10.gif" /></p>
+    <p><img alt="" class="align-left" height="10" src="10x10.gif" width="10"></p>
 
 In XHTML same generates align attribute:
   setup:
-    setRestricted: true
-    setLite: false
-    setImages: true
-    setLinkRelationShip: nofollow
-    setHtmlType: xhtml
+    - setRestricted: true
+    - setLite: false
+    - setImages: true
+    - setLinkRelationShip: nofollow
   input: |
     !=10x10.gif!
 
@@ -33,8 +33,8 @@ In XHTML same generates align attribute:
     !<10x10.gif!
 
   expect: |
-    <p><img align="center" alt="" src="10x10.gif" /></p>
+    <p><img align="center" alt="" height="10" src="10x10.gif" width="10" /></p>
 
-    <p><img align="right" alt="" src="10x10.gif" /></p>
+    <p><img align="right" alt="" height="10" src="10x10.gif" width="10" /></p>
 
-    <p><img align="left" alt="" src="10x10.gif" /></p>
+    <p><img align="left" alt="" height="10" src="10x10.gif" width="10" /></p>

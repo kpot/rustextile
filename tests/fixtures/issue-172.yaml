@@ -1,6 +1,4 @@
 List followed by strong:
-  setup:
-    setHtmlType: xhtml
   input: |
     # Red
     # Green

@@ -1,6 +1,4 @@
 Multiline links:
-  setup:
-    setHtmlType: xhtml
   input: |
     "This is a multiline
     link text":test

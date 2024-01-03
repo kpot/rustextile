@@ -49,8 +49,6 @@ Dividers accept trailing whitespace within the tag:
     <br   >
 
 Dividers can be self-closing:
-  setup:
-    setHtmlType: xhtml
   input: |
     <hr/>
 
@@ -61,8 +59,6 @@ Dividers can be self-closing:
     <br />
 
 Dividers can be paired containers:
-  setup:
-    setHtmlType: xhtml
   input: |
     <hr></hr>
 
@@ -156,7 +152,7 @@ Textile syntax that generates divider-like tags is not a divider:
 
 Dividers are sanitized in restricted mode:
   setup:
-    setRestricted: true
+    - setRestricted: true
   input: |
     <img src="image.jpg">
 

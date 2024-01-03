@@ -1,6 +1,4 @@
 Inline code can be used to embed code to a paragraph:
-  setup:
-    setHtmlType: xhtml
   input: |
     @This is some code@.
 
@@ -53,7 +51,7 @@ Inline code can be used to embed code to a paragraph:
 
 Inline code isn't processed in lite mode:
   setup:
-    setLite: true
+    - setLite: true
   input:  |
     @This would be *some* code@
 

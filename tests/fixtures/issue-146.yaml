@@ -1,0 +1,36 @@
+Relative links and images:
+  setup:
+    - setImagePrefix: http://example.com/images/
+    - setLinkPrefix: http://example.com/
+  input: |
+    "Text":link
+
+    "Text":./link
+
+    "Text":/link
+
+    "Text":http://example.com/
+
+    !10x10.gif!
+
+    !./10x10.gif!
+
+    !/10x10.gif!
+
+    "$":tel:0118-999-881-999-119-725-3
+  expect: |
+    <p><a href="http://example.com/link">Text</a></p>
+
+    <p><a href="./link">Text</a></p>
+
+    <p><a href="/link">Text</a></p>
+
+    <p><a href="http://example.com/">Text</a></p>
+
+    <p><img alt="" height="10" src="http://example.com/images/10x10.gif" width="10" /></p>
+
+    <p><img alt="" height="10" src="./10x10.gif" width="10" /></p>
+
+    <p><img alt="" height="10" src="/10x10.gif" width="10" /></p>
+
+    <p><a href="tel:0118-999-881-999-119-725-3">0118-999-881-999-119-725-3</a></p>

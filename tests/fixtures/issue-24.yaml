@@ -1,6 +1,4 @@
 Lists with invalid starting list depth are ignored:
-  setup:
-    setHtmlType: xhtml
   input: |
     ## Red
     ## Green

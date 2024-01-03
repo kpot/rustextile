@@ -3,14 +3,14 @@ Links placed one after other should be parsed:
     ["1":https://example.tld]["2":https://example.tld]["3":https://example.tld]
 
   expect: |
-    <p><a href="https://example.tld/">1</a><a href="https://example.tld/">2</a><a href="https://example.tld/">3</a></p>
+    <p><a href="https://example.tld">1</a><a href="https://example.tld">2</a><a href="https://example.tld">3</a></p>
 
 Continous non-breaking content between links should be allowed:
   input: |
     ["1":https://example.tld]|["2":https://example.tld]|["3":https://example.tld]
 
   expect: |
-    <p><a href="https://example.tld/">1</a>|<a href="https://example.tld/">2</a>|<a href="https://example.tld/">3</a></p>
+    <p><a href="https://example.tld">1</a>|<a href="https://example.tld">2</a>|<a href="https://example.tld">3</a></p>
 
 Same applies for continuous multi-byte characters between links:
   input: |
