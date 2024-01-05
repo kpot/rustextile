@@ -81,7 +81,7 @@ impl UrlBits {
 impl ToString for UrlBits {
     fn to_string(&self) -> String {
         match self {
-            UrlBits::AbsoluteUrl(url) => url.to_string(),
+            UrlBits::AbsoluteUrl(url) => url.to_string().trim_end_matches('/').to_string(),
             UrlBits::RelativeUrl {url, source} => {
                 let str_url = url.to_string();
                 match (str_url.find('?'), source.find('?')) {

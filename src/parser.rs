@@ -1446,7 +1446,7 @@ impl <'t> ParserState<'t> {
 
             let text: Cow<str> = if text == "$" {
                 if scheme_in_list {
-                    make_url_readable(&url).into()
+                    make_url_readable(&url).trim_end_matches('/').into()
                 } else if let Some(rurl) = self.urlrefs.get(url.as_ref()) {
                     encode_html(make_url_readable(rurl.source()), true, true).into()
                 } else {
