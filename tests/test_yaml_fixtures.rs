@@ -184,5 +184,6 @@ fn test_yaml_fixtures() {
         "issue-189",
         "issue-198",
         "issue-202",
+        "issue-224",
     ]);
 }
