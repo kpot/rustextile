@@ -30,7 +30,7 @@ impl BlockHtmlAttributes {
     {
         lazy_static! {
             static ref CSS_CLASS_NAME_RE: Regex = fregex!(
-                r"(?i)^-?[_a-z][_a-z0-9-]*$");
+                r"^([-a-zA-Z 0-9_\/\[\].:!#]+)$");
         }
         let trimmed_name = name.as_ref().trim();
         if CSS_CLASS_NAME_RE.is_match(trimmed_name).unwrap_or_default() {
@@ -110,7 +110,7 @@ impl BlockAttributes {
             static ref ATTR_PADDING_LEFT_RE: Regex = fregex!(r"([(]+)");
             static ref ATTR_PADDING_RIGHT_RE: Regex = fregex!(r"([)]+)");
             static ref ATTR_COL_RE: Regex = fregex!(r"^(?:\\(\d+)\.?)?\s*(\d+)?");
-            static ref CSS_CLASSES_RE: Regex = fregex!(r"^([-a-zA-Z 0-9_\.\/\[\]]*)$");
+            static ref CSS_CLASSES_RE: Regex = fregex!(r"^([-a-zA-Z 0-9_\.\/\[\]:!]*)$");
         }
         let mut style = Vec::<String>::new();
 
@@ -460,7 +460,11 @@ mod test {
         assert_eq!(atts.to_string(), " class=\"align-left\" id=\"id-value&amp;data\"");
         assert!(atts.insert_css_class("otherclass"));
         assert_eq!(atts.to_string(), " class=\"align-left otherclass\" id=\"id-value&amp;data\"");
-        assert!(!atts.insert_css_class("invalid/class/name"));
+        assert!(!atts.insert_css_class("invalid@class@name"));
         assert_eq!(atts.to_string(), " class=\"align-left otherclass\" id=\"id-value&amp;data\"");
+        assert!(atts.insert_css_class("md:mt-3"));
+        assert_eq!(atts.to_string(), " class=\"align-left otherclass md:mt-3\" id=\"id-value&amp;data\"");
+        assert!(atts.insert_css_class("!mt-3"));
+        assert_eq!(atts.to_string(), " class=\"align-left otherclass md:mt-3 !mt-3\" id=\"id-value&amp;data\"");
     }
 }
